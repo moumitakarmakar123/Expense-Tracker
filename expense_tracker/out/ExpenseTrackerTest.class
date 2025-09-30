@@ -1,0 +1,37 @@
+// Source code is decompiled from a .class file using FernFlower decompiler.
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class ExpenseTrackerTest {
+   private ExpenseTrackerView view;
+   private ExpenseTrackerApp app;
+
+   public ExpenseTrackerTest() {
+   }
+
+   @Before
+   public void setup() {
+      DefaultTableModel var1 = new DefaultTableModel();
+      var1.addColumn("Serial");
+      var1.addColumn("Amount");
+      var1.addColumn("Category");
+      var1.addColumn("Date");
+      this.view = new ExpenseTrackerView(var1);
+      this.app = new ExpenseTrackerApp();
+   }
+
+   @Test
+   public void testAddTransaction() {
+      double var1 = 100.0;
+      String var3 = "Food";
+      Transaction var4 = new Transaction(var1, var3);
+      this.view.addTransaction(var4);
+      List var5 = this.view.getTransactions();
+      Assert.assertEquals(1L, (long)var5.size());
+      Assert.assertEquals(var1, ((Transaction)var5.get(0)).getAmount(), 0.001);
+      Assert.assertEquals(var3, ((Transaction)var5.get(0)).getCategory());
+   }
+}
