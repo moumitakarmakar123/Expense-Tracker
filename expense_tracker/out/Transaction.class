@@ -1,0 +1,32 @@
+// Source code is decompiled from a .class file using FernFlower decompiler.
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class Transaction {
+   private final double amount;
+   private final String category;
+   private final String timestamp;
+
+   public Transaction(double var1, String var3) {
+      this.amount = var1;
+      this.category = var3;
+      this.timestamp = this.generateTimestamp();
+   }
+
+   public double getAmount() {
+      return this.amount;
+   }
+
+   public String getCategory() {
+      return this.category;
+   }
+
+   public String getTimestamp() {
+      return this.timestamp;
+   }
+
+   private String generateTimestamp() {
+      SimpleDateFormat var1 = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+      return var1.format(new Date());
+   }
+}
