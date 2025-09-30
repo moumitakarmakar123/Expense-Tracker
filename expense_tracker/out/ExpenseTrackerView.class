@@ -1,0 +1,120 @@
+// Source code is decompiled from a .class file using FernFlower decompiler.
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
+public class ExpenseTrackerView extends JFrame {
+   private JTable transactionsTable;
+   private JButton addTransactionBtn;
+   private JTextField amountField;
+   private JTextField categoryField;
+   private DefaultTableModel model;
+   private List<Transaction> transactions = new ArrayList();
+
+   public JTable getTransactionsTable() {
+      return this.transactionsTable;
+   }
+
+   public String getAmountText() {
+      return this.amountField.getText();
+   }
+
+   public void setAmountField(JTextField var1) {
+      this.amountField = var1;
+   }
+
+   public String getCategoryText() {
+      return this.categoryField.getText();
+   }
+
+   public void setCategoryField(JTextField var1) {
+      this.categoryField = var1;
+   }
+
+   public JButton getAddTransactionBtn() {
+      return this.addTransactionBtn;
+   }
+
+   public DefaultTableModel getTableModel() {
+      return this.model;
+   }
+
+   public ExpenseTrackerView(DefaultTableModel var1) {
+      this.setTitle("Expense Tracker");
+      this.setSize(600, 400);
+      this.model = var1;
+      this.addTransactionBtn = new JButton("Add Transaction");
+      JLabel var2 = new JLabel("Amount:");
+      this.amountField = new JTextField(10);
+      JLabel var3 = new JLabel("Category:");
+      this.categoryField = new JTextField(10);
+      this.transactionsTable = new JTable(var1);
+      JPanel var4 = new JPanel();
+      var4.add(var2);
+      var4.add(this.amountField);
+      var4.add(var3);
+      var4.add(this.categoryField);
+      var4.add(this.addTransactionBtn);
+      JPanel var5 = new JPanel();
+      var5.add(this.addTransactionBtn);
+      this.add(var4, "North");
+      this.add(new JScrollPane(this.transactionsTable), "Center");
+      this.add(var5, "South");
+      this.setSize(400, 300);
+      this.setDefaultCloseOperation(3);
+      this.setVisible(true);
+   }
+
+   public void refreshTable(List<Transaction> var1) {
+      this.model.setRowCount(0);
+      int var2 = this.model.getRowCount();
+      double var3 = 0.0;
+
+      Iterator var5;
+      Transaction var6;
+      for(var5 = var1.iterator(); var5.hasNext(); var3 += var6.getAmount()) {
+         var6 = (Transaction)var5.next();
+      }
+
+      var5 = var1.iterator();
+
+      while(var5.hasNext()) {
+         var6 = (Transaction)var5.next();
+         DefaultTableModel var10000 = this.model;
+         Object[] var10001 = new Object[4];
+         ++var2;
+         var10001[0] = var2;
+         var10001[1] = var6.getAmount();
+         var10001[2] = var6.getCategory();
+         var10001[3] = var6.getTimestamp();
+         var10000.addRow(var10001);
+      }
+
+      Object[] var7 = new Object[]{"Total", null, null, var3};
+      this.model.addRow(var7);
+      this.transactionsTable.updateUI();
+   }
+
+   public void refresh() {
+      List var1 = this.getTransactions();
+      this.refreshTable(var1);
+   }
+
+   public List<Transaction> getTransactions() {
+      return Collections.unmodifiableList(new ArrayList(this.transactions));
+   }
+
+   public void addTransaction(Transaction var1) {
+      this.transactions.add(var1);
+      this.refresh();
+   }
+}
