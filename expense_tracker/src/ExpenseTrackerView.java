@@ -5,8 +5,14 @@ import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List; 
 
+/**
+ * Swing-based view for the Expense Tracker application. Responsible for
+ * rendering inputs and the transactions table. Holds an internal list of
+ * transactions but exposes it immutably to callers.
+ */
 public class ExpenseTrackerView extends JFrame {
 
   private JTable transactionsTable;
@@ -18,24 +24,28 @@ public class ExpenseTrackerView extends JFrame {
 
   
 
+  /**
+   * @return the JTable component showing the transactions
+   */
   public JTable getTransactionsTable() {
     return transactionsTable;
   }
 
-  public double getAmountField() {
-    if(amountField.getText().isEmpty()) {
-      return 0;
-    }else {
-    double amount = Double.parseDouble(amountField.getText());
-    return amount;
-    }
+  /**
+   * @return raw string entered in the amount field
+   */
+  public String getAmountText() {
+    return amountField.getText();
   }
 
   public void setAmountField(JTextField amountField) {
     this.amountField = amountField;
   }
 
-  public String getCategoryField() {
+  /**
+   * @return raw string entered in the category field
+   */
+  public String getCategoryText() {
     return categoryField.getText();
   }
 
@@ -46,10 +56,17 @@ public class ExpenseTrackerView extends JFrame {
   public JButton getAddTransactionBtn() {
     return addTransactionBtn;
   }
+  /**
+   * @return the table model backing the transactions table
+   */
   public DefaultTableModel getTableModel() {
     return model;
   }
 
+  /**
+   * Constructs the view with a provided table model.
+   * @param model table model to use for the transactions table
+   */
   public ExpenseTrackerView(DefaultTableModel model) {
     setTitle("Expense Tracker"); // Set title
     setSize(600, 400); // Make GUI larger
@@ -105,32 +122,26 @@ public class ExpenseTrackerView extends JFrame {
       Object[] totalRow = {"Total", null, null, totalCost};
       model.addRow(totalRow);
   
-      // Fire table update
       transactionsTable.updateUI();
   
     }  
 
   public void refresh() {
 
-    // Get transactions from model
     List<Transaction> transactions = getTransactions();
   
-    // Pass to view
     refreshTable(transactions);
   
   }
 
   public List<Transaction> getTransactions() {
-    return transactions;
+    return Collections.unmodifiableList(new ArrayList<>(transactions));
   }
   
   public void addTransaction(Transaction t) {
     transactions.add(t);
-    getTableModel().addRow(new Object[]{t.getAmount(), t.getCategory(), t.getTimestamp()});
     refresh();
   }
   
 
-
-  // Other view methods
 }
