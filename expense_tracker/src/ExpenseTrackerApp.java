@@ -1,7 +1,8 @@
 import javax.swing.table.DefaultTableModel;
 
 /**
- * The ExpenseTrackerApp class allows users to add/remove daily transactions.
+ * Application entry point. Wires the view to basic controller behavior
+ * (input validation and transaction creation) and shows the UI.
  */
 public class ExpenseTrackerApp {
 
@@ -23,16 +24,28 @@ public class ExpenseTrackerApp {
 
     // Handle add transaction button clicks
     view.getAddTransactionBtn().addActionListener(e -> {
-      
-      // Get transaction data from view
-      double amount = view.getAmountField(); 
-      String category = view.getCategoryField();
+      try {
+        // Get raw input from view
+        String amountText = view.getAmountText();
+        String categoryText = view.getCategoryText();
 
-      // Create transaction object
-      Transaction t = new Transaction(amount, category);
+        // Validate
+        double amount = InputValidation.parseAndValidateAmount(amountText);
+        String category = InputValidation.validateCategory(categoryText);
 
-      // Call controller to add transaction
-      view.addTransaction(t);
+        // Create transaction object
+        Transaction t = new Transaction(amount, category);
+
+        // Add to model via view
+        view.addTransaction(t);
+      } catch (IllegalArgumentException ex) {
+        javax.swing.JOptionPane.showMessageDialog(
+          null,
+          ex.getMessage(),
+          "Invalid Input",
+          javax.swing.JOptionPane.ERROR_MESSAGE
+        );
+      }
     });
 
   }
