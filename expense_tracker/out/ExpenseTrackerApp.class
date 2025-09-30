@@ -1,0 +1,32 @@
+// Source code is decompiled from a .class file using FernFlower decompiler.
+import java.awt.Component;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+public class ExpenseTrackerApp {
+   public ExpenseTrackerApp() {
+   }
+
+   public static void main(String[] var0) {
+      DefaultTableModel var1 = new DefaultTableModel();
+      var1.addColumn("Serial");
+      var1.addColumn("Amount");
+      var1.addColumn("Category");
+      var1.addColumn("Date");
+      ExpenseTrackerView var2 = new ExpenseTrackerView(var1);
+      var2.setVisible(true);
+      var2.getAddTransactionBtn().addActionListener((var1x) -> {
+         try {
+            String var2x = var2.getAmountText();
+            String var3 = var2.getCategoryText();
+            double var4 = InputValidation.parseAndValidateAmount(var2x);
+            String var6 = InputValidation.validateCategory(var3);
+            Transaction var7 = new Transaction(var4, var6);
+            var2.addTransaction(var7);
+         } catch (IllegalArgumentException var8) {
+            JOptionPane.showMessageDialog((Component)null, var8.getMessage(), "Invalid Input", 0);
+         }
+
+      });
+   }
+}
